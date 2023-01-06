@@ -61,11 +61,13 @@ function EnableCopy() {
       if (isEntry(keyword)) {
         document.body.contentEditable = true
         isEditing = true
+        alert('开始复制')
       }
 
       if (isEditing && isEntry(removeKey)) {
         document.body.contentEditable = false
         isEditing = false
+        alert('结束')
       }
 
       clearTimeout(timer);
