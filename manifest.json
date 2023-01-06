@@ -1,0 +1,36 @@
+{
+  "name": "全屏",
+  "description": "进入全屏状态",
+  "version": "1.0",
+  "manifest_version": 3,
+  "icons": {
+    "16": "icon.png",
+    "32": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  },
+  // 权限申请
+  "permissions": [
+    "contextMenus", // 右键菜单
+    "tabs", // 标签
+    "notifications", // 通知
+    "webRequest", // web请求
+    "storage" // 插件本地存储
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["index.js"]
+    }
+  ],
+  // "background": {
+  //   "service_worker": "index.js",
+  //   "type": "module"
+  // },
+  // 插件主页，这个很重要，不要浪费了这个免费广告位
+  "homepage_url": "https://www.baidu.com",
+  // 只能指向一个HTML文件，不能是JS文件
+  // "devtools_page": "devtool.html"
+  // 向地址栏注册一个关键字以提供搜索建议，只能设置一个关键字
+  "omnibox": { "keyword": "mv" }
+}
