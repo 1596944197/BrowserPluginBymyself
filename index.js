@@ -94,7 +94,7 @@ function EnableCopy() {
 
 function isBilibiliVideoPlaying() {
   requestIdleCallback(() => {
-    const classList = [".bpx-player-control-wrap"];
+    const classList = [".bpx-player-control-wrap", "video"];
     const t = classList.find((cla) => document.querySelector(cla));
     if (t) {
       document.documentElement.addEventListener("keydown", (ev) => {
