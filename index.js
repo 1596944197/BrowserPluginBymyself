@@ -94,17 +94,26 @@ function EnableCopy() {
 
 function isBilibiliVideoPlaying() {
   requestIdleCallback(() => {
-    const t = document.querySelector("video");
+    const classList = [".bpx-player-control-wrap"];
+    const t = classList.find((cla) => document.querySelector(cla));
     if (t) {
       document.documentElement.addEventListener("keydown", (ev) => {
         if (ev.ctrlKey) {
-          const item = document.querySelector("video");
+          const itemList = document.querySelectorAll("video");
           switch (ev.key) {
             case "ArrowUp":
-              item.playbackRate = (item.playbackRate + 0.1).toFixed(2);
+              console.log("音量增加");
+              itemList.forEach(
+                (item) =>
+                  (item.playbackRate = (item.playbackRate + 0.1).toFixed(2))
+              );
               break;
             case "ArrowDown":
-              item.playbackRate = (item.playbackRate - 0.1).toFixed(2);
+              console.log("音量减少");
+              itemList.forEach(
+                (item) =>
+                  (item.playbackRate = (item.playbackRate - 0.1).toFixed(2))
+              );
               break;
             default:
               break;
