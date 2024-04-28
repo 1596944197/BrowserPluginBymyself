@@ -12,6 +12,7 @@
   "use strict";
   document.addEventListener("keydown", FullScreen());
   document.addEventListener("keydown", EnableCopy());
+  document.addEventListener("keydown", toggleYoTubeVideoControl());
   window.addEventListener("load", reloadPage);
 })();
 
@@ -58,7 +59,7 @@ function EnableCopy() {
 
   return function (_a) {
     const key = "".toLocaleUpperCase.call(_a.key);
-    if (keyword.includes(key) || removeKey.includes(key)) {
+    if ((keyword.includes(key) || removeKey.includes(key)) && _a.ctrlKey) {
       passKey.push(key);
       if (isEntry(keyword)) {
         document.body.contentEditable = true;
@@ -124,4 +125,18 @@ function isBilibiliVideoPlaying() {
     }
     isBilibiliVideoPlaying();
   });
+}
+
+function toggleYoTubeVideoControl() {
+  // 检测ctrl + v
+  let isShow = true;
+  return function l(_a) {
+    const key = "".toLocaleUpperCase.call(_a.key);
+    if (key === "V" && _a.ctrlKey) {
+      const videoControl = document.querySelector(".ytp-chrome-bottom");
+      if (!videoControl) return;
+      videoControl.style.display = isShow ? "none" : "block";
+      isShow = !isShow;
+    }
+  }
 }
