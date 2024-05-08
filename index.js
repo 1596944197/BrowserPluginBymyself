@@ -135,6 +135,9 @@ function toggleYoTubeVideoControl() {
     if (key === "V" && _a.ctrlKey) {
       const videoControl = document.querySelector(".ytp-chrome-bottom");
       if (!videoControl) return;
+      const subButton = document.querySelector(".iv-branding");
+      if (subButton) subButton.style.display = isShow ? "none" : "block";
+
       videoControl.style.display = isShow ? "none" : "block";
       isShow = !isShow;
     }
