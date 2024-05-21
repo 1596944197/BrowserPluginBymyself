@@ -138,8 +138,21 @@ function toggleYoTubeVideoControl() {
       const subButton = document.querySelector(".iv-branding");
       if (subButton) subButton.style.display = isShow ? "none" : "block";
 
+      const container = document.querySelector(
+        "#container .html5-video-player"
+      );
+      // 给container填入事件，当鼠标移入到container时，对subtitle进行操作
+      container.onmouseover = changeSubtitleMargin;
+
       videoControl.style.display = isShow ? "none" : "block";
       isShow = !isShow;
+    }
+  };
+
+  function changeSubtitleMargin() {
+    if (!isShow) {
+      const subtitle = document.querySelector(".caption-window");
+      subtitle.style.setProperty("margin-bottom", "0px", "important");
     }
   }
 }
