@@ -151,8 +151,17 @@ function toggleYoTubeVideoControl() {
 
   function changeSubtitleMargin() {
     if (!isShow) {
-      const subtitle = document.querySelector(".caption-window");
-      subtitle.style.setProperty("margin-bottom", "0px", "important");
+      const subtitle = document.querySelectorAll(".caption-window");
+      subtitle.forEach((item) => {
+        // 查看元素的margin-bottom 是否为0px，如果不是则设置为0px
+        const marginBottom = item.style.getPropertyValue("margin-bottom");
+        if (marginBottom !== "0px") {
+          item.style.setProperty("margin-bottom", "0px", "important");
+        }
+      });
+      setTimeout(() => {
+        changeSubtitleMargin();
+      }, 50);
     }
   }
 }
