@@ -23,6 +23,7 @@ function reloadPage() {
   }
   deleteAds();
   isBilibiliVideoPlaying();
+  nodeSeekAutoCheckIn();
 }
 
 function deleteAds() {
@@ -163,5 +164,16 @@ function toggleYoTubeVideoControl() {
         changeSubtitleMargin();
       }, 50);
     }
+  }
+}
+
+async function nodeSeekAutoCheckIn() {
+  const current = new Date().toLocaleDateString('zh-CN');
+  const key = '_checkedDays'
+  if (location.href.includes('nodeseek.com')) {
+    if (localStorage.getItem(key) === current) return
+    localStorage.setItem(key, current)
+    location.href += 'board'
+    await fetch('/api/attendance?random=true')
   }
 }
