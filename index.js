@@ -131,6 +131,7 @@ function isBilibiliVideoPlaying() {
 function toggleYoTubeVideoControl() {
   // 检测ctrl + v
   let isShow = true;
+  let timer = null;
   return function l(_a) {
     const key = "".toLocaleUpperCase.call(_a.key);
     if (key === "V" && _a.ctrlKey) {
@@ -160,9 +161,10 @@ function toggleYoTubeVideoControl() {
           item.style.setProperty("margin-bottom", "0px", "important");
         }
       });
-      setTimeout(() => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
         changeSubtitleMargin();
-      }, 50);
+      }, 16);
     }
   }
 }
