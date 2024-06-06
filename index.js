@@ -20,6 +20,7 @@ function reloadPage() {
   FullScreenPDF();
   deleteAds();
   isBilibiliVideoPlaying();
+  isBilibiliVideoPlaying.loadHandle();
   nodeSeekAutoCheckIn();
 }
 
@@ -107,33 +108,66 @@ function isBilibiliVideoPlaying() {
     const classList = [".bpx-player-control-wrap", "video"];
     const t = classList.find((cla) => document.querySelector(cla));
     if (t) {
-      document.documentElement.addEventListener("keydown", (ev) => {
-        if (ev.ctrlKey) {
-          const itemList = document.querySelectorAll("video");
-          switch (ev.key) {
-            case "ArrowUp":
-              console.log("音量增加");
-              itemList.forEach(
-                (item) =>
-                  (item.playbackRate = (item.playbackRate + 0.1).toFixed(2))
-              );
-              break;
-            case "ArrowDown":
-              console.log("音量减少");
-              itemList.forEach(
-                (item) =>
-                  (item.playbackRate = (item.playbackRate - 0.1).toFixed(2))
-              );
-              break;
-            default:
-              break;
-          }
-        }
-      });
+      document.documentElement.removeEventListener("keydown", isBilibiliVideoPlaying.handle);
+      document.documentElement.addEventListener("keydown", isBilibiliVideoPlaying.handle);
       return;
     }
     isBilibiliVideoPlaying();
   });
+}
+
+isBilibiliVideoPlaying.key = "_videoRate";
+isBilibiliVideoPlaying.handle = function handle(ev) {
+  const key = isBilibiliVideoPlaying.key;
+  if (ev.ctrlKey && ["ArrowUp", "ArrowDown"].includes(ev.key)) {
+
+    const itemList = document.querySelectorAll("video");
+    let rate = +(localStorage.getItem(key) || 1);
+    switch (ev.key) {
+      case "ArrowUp":
+        console.log("音量增加");
+        rate = (rate + 0.1).toFixed(2)
+        localStorage.setItem(key, rate)
+        break;
+      case "ArrowDown":
+        console.log("音量减少");
+        rate = (rate - 0.1).toFixed(2)
+        localStorage.setItem(key, rate)
+        break;
+      default:
+        break;
+    }
+    itemList.forEach(
+      (item) => (item.playbackRate = rate)
+    );
+  }
+}
+isBilibiliVideoPlaying.loadHandle = function loadHandle() {
+  const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+      if (mutation.type === 'childList') {
+        mutation.addedNodes.forEach(node => {
+          if (node.tagName === 'VIDEO' && node instanceof HTMLVideoElement) {
+            h(node)
+          }
+        });
+      }
+    });
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+
+  document.querySelectorAll('video').forEach(h)
+  /**
+   * 
+   * @param {HTMLVideoElement} node 
+   */
+  function h(node) {
+    if (node._isHandle) return
+    node.addEventListener('loadedmetadata', () => {
+      node.playbackRate = +(localStorage.getItem(isBilibiliVideoPlaying.key) || 1)
+    })
+    node._isHandle = true
+  }
 }
 
 function toggleYoTubeVideoControl() {
