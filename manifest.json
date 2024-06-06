@@ -19,8 +19,12 @@
   ],
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["index.js"]
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "index.js"
+      ]
     }
   ],
   // "background": {
@@ -28,9 +32,11 @@
   //   "type": "module"
   // },
   // 插件主页，这个很重要，不要浪费了这个免费广告位
-  "homepage_url": "https://www.baidu.com",
+  "homepage_url": "https://mh33.top/playList",
   // 只能指向一个HTML文件，不能是JS文件
   // "devtools_page": "devtool.html"
   // 向地址栏注册一个关键字以提供搜索建议，只能设置一个关键字
-  "omnibox": { "keyword": "mv" }
+  "omnibox": {
+    "keyword": "mv"
+  }
 }
