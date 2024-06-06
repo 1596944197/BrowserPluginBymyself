@@ -182,7 +182,9 @@ async function nodeSeekAutoCheckIn() {
   const key = '_checkedDays'
   if (location.href.includes('nodeseek.com')) {
     if (localStorage.getItem(key) === current) return
-    await fetch('/api/attendance?random=true', { method: 'post' })
-    localStorage.setItem(key, current)
+    setTimeout(async () => {
+      await fetch('/api/attendance?random=true', { method: 'post' })
+      localStorage.setItem(key, current)
+    }, 1000);
   }
 }
