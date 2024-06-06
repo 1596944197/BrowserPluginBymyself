@@ -17,13 +17,21 @@
 })();
 
 function reloadPage() {
-  if (location.protocol === "file:") {
-    !location.hash && (location.hash += "#view=FitH,top");
-    if (!location.hash.includes("#view=FitH,top")) location.reload();
-  }
+  FullScreenPDF();
   deleteAds();
   isBilibiliVideoPlaying();
   nodeSeekAutoCheckIn();
+}
+
+function FullScreenPDF() {
+  if (location.protocol === "file:") {
+    if (!location.hash) {
+      (location.hash += "#view=FitH,top")
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
+    }
+  }
 }
 
 function deleteAds() {
@@ -65,13 +73,13 @@ function EnableCopy() {
       if (isEntry(keyword)) {
         document.body.contentEditable = true;
         isEditing = true;
-        alert("开始复制");
+        console.log("开始复制");
       }
 
       if (isEditing && isEntry(removeKey)) {
         document.body.contentEditable = false;
         isEditing = false;
-        alert("结束");
+        console.log("结束");
       }
 
       clearTimeout(timer);

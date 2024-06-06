@@ -7,7 +7,34 @@
 
 # done
 
-- [x] in order shift+z+x enter full-screen
-- [x] c+c+v enter copy mode,and shift+shift+alt leave this mode
-- [x] control+arrowUp/arrowDown change current page playbackRate
-- [x] delete 若川 site ads
+```
+shift+z+x enter full-screen
+```
+
+```
+ctrl+c+c+v enter copy mode,
+ctrl+shift+shift+alt leave this mode
+
+```
+
+```
+ctrl+arrowUp/arrowDown change current page video playbackRate
+(match all of site)
+
+```
+
+```
+delete 若川 site ads
+```
+
+```
+pdf auto large Screen preview
+```
+
+```
+ctrl+v toggle yotube video control
+```
+
+```
+nodeSeek site auto check-in
+```
