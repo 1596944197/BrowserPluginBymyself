@@ -23,16 +23,15 @@
         "<all_urls>"
       ],
       "js": [
-        "index.js"
+        "index.mjs"
       ]
     }
   ],
-  // "background": {
-  //   "service_worker": "index.js",
-  //   "type": "module"
-  // },
+  "background": {
+    "service_worker": "background.mjs"
+  },
   // 插件主页，这个很重要，不要浪费了这个免费广告位
-  "homepage_url": "https://mh33.top/playList",
+  "homepage_url": "https://mh33.top/payList",
   // 只能指向一个HTML文件，不能是JS文件
   // "devtools_page": "devtool.html"
   // 向地址栏注册一个关键字以提供搜索建议，只能设置一个关键字
