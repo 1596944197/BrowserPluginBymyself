@@ -15,7 +15,8 @@
     "tabs", // 标签
     "notifications", // 通知
     "webRequest", // web请求
-    "storage" // 插件本地存储
+    "storage", // 插件本地存储
+    "scripting" // 注入脚本
   ],
   "content_scripts": [
     {

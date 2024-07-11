@@ -1,0 +1,15 @@
+{
+  "name": "chrome-extend",
+  "version": "1.0.0",
+  "description": "- copy current repo to local\r - if use chrome,input chrome://extensions/ to url and enter\r - load unpacked this local folder\r - flush page",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/chrome": "^0.0.268"
+  }
+}
