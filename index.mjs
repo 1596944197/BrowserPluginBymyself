@@ -131,12 +131,12 @@ isBilibiliVideoPlaying.handle = function handle(ev) {
     let title = "";
     switch (ev.key) {
       case "ArrowUp":
-        title = `音量增加`;
+        title = `速度增加`;
         rate = (rate + 0.1).toFixed(2);
         localStorage.setItem(key, rate);
         break;
       case "ArrowDown":
-        title = `音量减少`;
+        title = `速度减少`;
         rate = (rate - 0.1).toFixed(2);
         localStorage.setItem(key, rate);
         break;
