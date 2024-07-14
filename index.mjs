@@ -13,6 +13,7 @@
   document.addEventListener("keydown", FullScreen());
   document.addEventListener("keydown", EnableCopy());
   document.addEventListener("keydown", toggleYoTubeVideoControl());
+  document.addEventListener("keydown", switchTabs());
   window.addEventListener("load", reloadPage);
 })();
 
@@ -46,6 +47,7 @@ function FullScreen() {
   let keyword = ["Z", "X", "SHIFT"];
 
   return function (_a) {
+    if (!_a?.key) return;
     const key = "".toLocaleUpperCase.call(_a.key);
     if (keyword.includes(key)) {
       passKey.push(key);
@@ -68,6 +70,7 @@ function EnableCopy() {
   let isEditing = false;
 
   return function (_a) {
+    if (!_a?.key) return;
     const key = "".toLocaleUpperCase.call(_a.key);
     if ((keyword.includes(key) || removeKey.includes(key)) && _a.ctrlKey) {
       passKey.push(key);
@@ -194,6 +197,7 @@ function toggleYoTubeVideoControl() {
   let isShow = true;
   let timer = null;
   return function l(_a) {
+    if (!_a?.key) return;
     const key = "".toLocaleUpperCase.call(_a.key);
     if (key === "V" && _a.ctrlKey) {
       const videoControl = document.querySelector(".ytp-chrome-bottom");
@@ -239,5 +243,39 @@ async function nodeSeekAutoCheckIn() {
       await fetch("/api/attendance?random=true", { method: "post" });
       localStorage.setItem(key, current);
     }, 1000);
+  }
+}
+
+/**
+ * @param {KeyboardEvent} ev
+ */
+function switchTabs(ev) {
+  if (!ev?.key) return;
+  const key = ev.key.toUpperCase();
+
+  if (ev.shiftKey && key === "ARROWLEFT" && ev.ctrlKey) {
+    // 切换到上一个标签页
+    chrome.runtime.sendMessage(
+      {
+        type: "SWITCH_TAB",
+        data: "prev",
+        url: location.href,
+      },
+      (res) => {
+        console.log(res);
+      }
+    );
+  } else if (ev.shiftKey && key === "ARROWRIGHT" && ev.ctrlKey) {
+    // 切换到下一个标签页
+    chrome.runtime.sendMessage(
+      {
+        type: "SWITCH_TAB",
+        data: "next",
+        url: location.href,
+      },
+      (res) => {
+        console.log(res);
+      }
+    );
   }
 }

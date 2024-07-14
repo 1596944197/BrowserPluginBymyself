@@ -38,5 +38,9 @@
   // 向地址栏注册一个关键字以提供搜索建议，只能设置一个关键字
   "omnibox": {
     "keyword": "mv"
+  },
+  "action": {
+    "default_popup": "popop.html",
+    "default_icon": "icon.png"
   }
 }
