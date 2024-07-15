@@ -13,7 +13,7 @@
   document.addEventListener("keydown", FullScreen());
   document.addEventListener("keydown", EnableCopy());
   document.addEventListener("keydown", toggleYoTubeVideoControl());
-  document.addEventListener("keydown", switchTabs());
+  document.addEventListener("keydown", switchTabs);
   window.addEventListener("load", reloadPage);
 })();
 
@@ -253,7 +253,6 @@ async function nodeSeekAutoCheckIn() {
 function switchTabs(ev) {
   if (!ev?.key) return;
   const key = ev.key.toUpperCase();
-
   if (ev.shiftKey && key === "ARROWLEFT" && ev.ctrlKey) {
     // 切换到上一个标签页
     chrome.runtime.sendMessage(
