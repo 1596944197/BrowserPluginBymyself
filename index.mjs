@@ -23,6 +23,7 @@ function reloadPage() {
   isBilibiliVideoPlaying();
   isBilibiliVideoPlaying.loadHandle();
   nodeSeekAutoCheckIn();
+  WuAiPoJieAutoLogin();
 }
 
 function FullScreenPDF() {
@@ -277,5 +278,22 @@ function switchTabs(ev) {
         console.log(res);
       }
     );
+  }
+}
+
+function WuAiPoJieAutoLogin() {
+  const date = new Date().toLocaleDateString("zh-CN").replaceAll("/", "-");
+  if (
+    location.href.includes("52pojie") &&
+    localStorage.getItem("_wuAiPoJieAutoLogin") !== date
+  ) {
+    const loginBtn = document.querySelector(
+      `a[href*="home.php?mod=task&do=apply&"] img`
+    );
+    if (loginBtn) {
+      loginBtn.click();
+      // 格式化时间为2023-01-01
+      localStorage.setItem("_wuAiPoJieAutoLogin", date);
+    }
   }
 }
