@@ -1,7 +1,23 @@
 chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
   if (req.type === "GET_LOCAL_STORAGE") {
     // 调用通知接口
-    handleGetLocalStorage(req, sender, sendResponse);
+    chrome.notifications.create(
+      undefined,
+      {
+        type: "basic",
+        iconUrl: "icon.png",
+        title: req.data.title,
+        message: req.data.message,
+        silent: true,
+      },
+      (id) => {
+        setTimeout(() => {
+          chrome.notifications.clear(id);
+        });
+        sendResponse({ status: "success", message: "调整速度成功" });
+      }
+    );
+    return true;
   }
   if (req.type === "SWITCH_TAB") {
     (async () => {
