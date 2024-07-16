@@ -27,18 +27,21 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
       );
       // req.data 是 next or prev 根据这个参数来决定是否切换到下一个tab还是上一个tab
       let nextTabIndex =
-        currentTabIndex +
-        (req.data === "next"
-          ? currentTabIndex + 1 === tabs.length
-            ? 2
-            : 1
-          : currentTabIndex === 0
-          ? -1
-          : currentTabIndex - 1);
+        req.data === "next" ? currentTabIndex + 1 : currentTabIndex - 1;
+      if (nextTabIndex < 0) {
+        nextTabIndex = tabs.length - 1;
+      } else if (nextTabIndex > tabs.length - 1) {
+        nextTabIndex = 0;
+      }
 
       // 当前的tab设为不激活
-      chrome.tabs.update(tabs.at(nextTabIndex).id, { active: true });
-      chrome.tabs.update(tabs[currentTabIndex].id, { active: false });
+      tabs.at(nextTabIndex)?.id &&
+        chrome.tabs.update(tabs.at(nextTabIndex).id, {
+          active: true,
+          highlighted: true,
+        });
+      tabs.at(currentTabIndex)?.id &&
+        chrome.tabs.update(tabs.at(currentTabIndex).id, { active: false });
 
       sendResponse({
         status: "success",
