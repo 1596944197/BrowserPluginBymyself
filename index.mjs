@@ -129,9 +129,12 @@ isBilibiliVideoPlaying.key = "_videoRate";
 isBilibiliVideoPlaying.handle = function handle(ev) {
   const key = isBilibiliVideoPlaying.key;
   if (ev.ctrlKey && ["ArrowUp", "ArrowDown"].includes(ev.key)) {
-    const itemList = document.querySelectorAll("video");
+    const currentVideo = getLargestVisibleVideo();
+    if (!currentVideo) return;
+
     let rate = +(localStorage.getItem(key) || 1);
     let title = "";
+
     switch (ev.key) {
       case "ArrowUp":
         title = `速度增加`;
@@ -146,7 +149,8 @@ isBilibiliVideoPlaying.handle = function handle(ev) {
       default:
         break;
     }
-    itemList.forEach((item) => (item.playbackRate = rate));
+
+    currentVideo.playbackRate = rate;
 
     chrome.runtime.sendMessage(
       {
@@ -261,4 +265,31 @@ function WuAiPoJieAutoLogin() {
       localStorage.setItem("_wuAiPoJieAutoLogin", date);
     }
   }
+}
+
+/** @returns {HTMLVideoElement} */
+function getLargestVisibleVideo() {
+  const videos = document.querySelectorAll("video");
+  let largestVideo = null;
+  let largestArea = 0;
+
+  videos.forEach((video) => {
+    const rect = video.getBoundingClientRect();
+    const width = Math.max(
+      0,
+      Math.min(window.innerWidth, rect.right) - Math.max(0, rect.left)
+    );
+    const height = Math.max(
+      0,
+      Math.min(window.innerHeight, rect.bottom) - Math.max(0, rect.top)
+    );
+    const area = width * height;
+
+    if (area > largestArea) {
+      largestArea = area;
+      largestVideo = video;
+    }
+  });
+
+  return largestVideo;
 }
