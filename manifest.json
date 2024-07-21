@@ -17,7 +17,8 @@
     "webRequest", // web请求
     "storage", // 插件本地存储
     "scripting", // 注入脚本
-    "commands"
+    "commands",
+    "tts"
   ],
   "content_scripts": [
     {

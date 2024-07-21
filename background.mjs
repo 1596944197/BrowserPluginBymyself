@@ -38,3 +38,9 @@ function switchTab(direction) {
     });
   });
 }
+
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.tts.speak(
+    "hello guys, welcome to that, and if you want to see more info, you can search website url mh33.top."
+  );
+});
