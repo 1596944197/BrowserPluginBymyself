@@ -13,7 +13,6 @@
   document.addEventListener("keydown", FullScreen());
   document.addEventListener("keydown", EnableCopy());
   document.addEventListener("keydown", toggleYoTubeVideoControl());
-  document.addEventListener("keydown", switchTabs);
   window.addEventListener("load", reloadPage);
 })();
 
@@ -244,39 +243,6 @@ async function nodeSeekAutoCheckIn() {
       await fetch("/api/attendance?random=true", { method: "post" });
       localStorage.setItem(key, current);
     }, 1000);
-  }
-}
-
-/**
- * @param {KeyboardEvent} ev
- */
-function switchTabs(ev) {
-  if (!ev?.key) return;
-  const key = ev.key.toUpperCase();
-  if (ev.shiftKey && key === "ARROWLEFT" && ev.ctrlKey) {
-    // 切换到上一个标签页
-    chrome.runtime.sendMessage(
-      {
-        type: "SWITCH_TAB",
-        data: "prev",
-        url: location.href,
-      },
-      (res) => {
-        console.log(res);
-      }
-    );
-  } else if (ev.shiftKey && key === "ARROWRIGHT" && ev.ctrlKey) {
-    // 切换到下一个标签页
-    chrome.runtime.sendMessage(
-      {
-        type: "SWITCH_TAB",
-        data: "next",
-        url: location.href,
-      },
-      (res) => {
-        console.log(res);
-      }
-    );
   }
 }
 

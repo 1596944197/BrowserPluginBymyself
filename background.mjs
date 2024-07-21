@@ -56,3 +56,21 @@ async function getAllTabs() {
   let tabs = await chrome.tabs.query({});
   return tabs;
 }
+
+chrome.commands.onCommand.addListener((command) => {
+  if (command === "switch-left-tab") {
+    switchTab(-1); // 向左切换标签
+  } else if (command === "switch-right-tab") {
+    switchTab(1); // 向右切换标签
+  }
+});
+
+function switchTab(direction) {
+  chrome.tabs.query({ currentWindow: true }, (tabs) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (activeTabs) => {
+      let activeTabIndex = tabs.findIndex((tab) => tab.id === activeTabs[0].id);
+      let newIndex = (activeTabIndex + direction + tabs.length) % tabs.length;
+      chrome.tabs.update(tabs[newIndex].id, { active: true });
+    });
+  });
+}

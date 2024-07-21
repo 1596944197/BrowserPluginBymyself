@@ -16,7 +16,8 @@
     "notifications", // 通知
     "webRequest", // web请求
     "storage", // 插件本地存储
-    "scripting" // 注入脚本
+    "scripting", // 注入脚本
+    "commands"
   ],
   "content_scripts": [
     {
@@ -42,5 +43,16 @@
   "action": {
     "default_popup": "popop.html",
     "default_icon": "icon.png"
+  },
+  // 起名不能用蛇形
+  "commands": {
+    "switch-left-tab": {
+      "suggested_key": "Ctrl+Shift+Left",
+      "description": "切换到上一个标签"
+    },
+    "switch-right-tab": {
+      "suggested_key": "Ctrl+Shift+Right",
+      "description": "切换到下一个标签"
+    }
   }
 }
