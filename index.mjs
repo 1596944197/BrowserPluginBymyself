@@ -8,6 +8,7 @@
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        none
 // ==/UserScript==
+
 (function () {
   "use strict";
   document.addEventListener("keydown", FullScreen());
@@ -154,7 +155,7 @@ isBilibiliVideoPlaying.handle = function handle(ev) {
 
     chrome.runtime.sendMessage(
       {
-        type: "GET_LOCAL_STORAGE",
+        type: "change-play-rate",
         data: {
           title,
           message: localStorage.getItem(key),

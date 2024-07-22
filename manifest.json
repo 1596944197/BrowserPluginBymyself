@@ -14,11 +14,10 @@
     "contextMenus", // 右键菜单
     "tabs", // 标签
     "notifications", // 通知
-    "webRequest", // web请求
     "storage", // 插件本地存储
-    "scripting", // 注入脚本
     "commands",
-    "tts"
+    "tts",
+    "contextMenus"
   ],
   "content_scripts": [
     {
@@ -31,7 +30,8 @@
     }
   ],
   "background": {
-    "service_worker": "background.mjs"
+    "service_worker": "background.mjs",
+    "type": "module"
   },
   // 插件主页，这个很重要，不要浪费了这个免费广告位
   "homepage_url": "https://mh33.top/payList",
