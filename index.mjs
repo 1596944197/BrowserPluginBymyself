@@ -167,12 +167,14 @@ isBilibiliVideoPlaying.handle = function handle(ev) {
   }
 };
 isBilibiliVideoPlaying.loadHandle = function loadHandle() {
+  const playbackRate = +localStorage.getItem(isBilibiliVideoPlaying.key) || 1;
+
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       if (mutation.type === "childList") {
         mutation.addedNodes.forEach((node) => {
           if (node.tagName === "VIDEO" && node instanceof HTMLVideoElement) {
-            h(node);
+            handleVideo(node);
           }
         });
       }
@@ -180,18 +182,21 @@ isBilibiliVideoPlaying.loadHandle = function loadHandle() {
   });
   observer.observe(document.body, { childList: true, subtree: true });
 
-  document.querySelectorAll("video").forEach(h);
+  document.querySelectorAll("video").forEach(handleVideo);
+
   /**
-   *
    * @param {HTMLVideoElement} node
    */
-  function h(node) {
+  function handleVideo(node) {
     if (node._isHandle) return;
-    node.addEventListener("loadedmetadata", () => {
-      node.playbackRate = +(
-        localStorage.getItem(isBilibiliVideoPlaying.key) || 1
-      );
+
+    // 使用一次性事件监听器
+    node.addEventListener("loadedmetadata", function onLoadedMetadata() {
+      node.playbackRate = playbackRate;
+      // 移除事件监听器
+      node.removeEventListener("loadedmetadata", onLoadedMetadata);
     });
+
     node._isHandle = true;
   }
 };
