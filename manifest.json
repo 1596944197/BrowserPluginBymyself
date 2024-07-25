@@ -26,6 +26,9 @@
       ],
       "js": [
         "index.mjs"
+      ],
+      "css": [
+        "scrollbar.css"
       ]
     }
   ],
@@ -55,5 +58,7 @@
       "suggested_key": "Ctrl+Shift+Right",
       "description": "切换到下一个标签"
     }
-  }
+  },
+  // 用于替换某个url的页面
+  "chrome_url_overrides": {}
 }
