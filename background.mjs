@@ -30,7 +30,13 @@ chrome.commands.onCommand.addListener((command) => {
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === ttsReadKey) {
-    chrome.tts.speak(info.selectionText);
+    function isChineseText(text) {
+      const chineseRegex = /[\u4e00-\u9fa5]/;
+      return chineseRegex.test(text);
+    }
+    chrome.tts.speak(info.selectionText, {
+      lang: isChineseText(info.selectionText) ? "zh-CN" : "en-US",
+    });
   }
 });
 
