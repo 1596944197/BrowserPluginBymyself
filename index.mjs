@@ -170,12 +170,17 @@ isBilibiliVideoPlaying.handle = function handle(ev) {
 isBilibiliVideoPlaying.loadHandle = function loadHandle() {
   const playbackRate = +localStorage.getItem(isBilibiliVideoPlaying.key) || 1;
 
+  const Set = new WeakSet();
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       if (mutation.type === "childList") {
         mutation.addedNodes.forEach((node) => {
-          if (node.tagName === "VIDEO" && node instanceof HTMLVideoElement) {
-            handleVideo(node);
+          if (
+            node.tagName === "VIDEO" &&
+            node instanceof HTMLVideoElement &&
+            !Set.has(node)
+          ) {
+            handleVideo(node, Set);
           }
         });
       }
@@ -187,18 +192,19 @@ isBilibiliVideoPlaying.loadHandle = function loadHandle() {
 
   /**
    * @param {HTMLVideoElement} node
+   * @param {WeakSet<object>} set
    */
-  function handleVideo(node) {
+  function handleVideo(node, set) {
     if (node._isHandle) return;
 
     // 使用一次性事件监听器
     node.addEventListener("loadedmetadata", function onLoadedMetadata() {
       node.playbackRate = playbackRate;
       // 移除事件监听器
-      node.removeEventListener("loadedmetadata", onLoadedMetadata);
     });
 
     node._isHandle = true;
+    set.add(node);
   }
 };
 
