@@ -169,8 +169,8 @@ isBilibiliVideoPlaying.handle = function handle(ev) {
 };
 isBilibiliVideoPlaying.loadHandle = function loadHandle() {
   const playbackRate = +localStorage.getItem(isBilibiliVideoPlaying.key) || 1;
-
   const Set = new WeakSet();
+
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       if (mutation.type === "childList") {
@@ -188,7 +188,7 @@ isBilibiliVideoPlaying.loadHandle = function loadHandle() {
   });
   observer.observe(document.body, { childList: true, subtree: true });
 
-  document.querySelectorAll("video").forEach(handleVideo);
+  document.querySelectorAll("video").forEach((ev) => handleVideo(ev, Set));
 
   /**
    * @param {HTMLVideoElement} node
