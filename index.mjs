@@ -195,15 +195,13 @@ isBilibiliVideoPlaying.loadHandle = function loadHandle() {
    * @param {WeakSet<object>} set
    */
   function handleVideo(node, set) {
-    if (node._isHandle) return;
+    if (node.playbackRate === playbackRate) return;
 
     // 使用一次性事件监听器
     node.addEventListener("loadedmetadata", function onLoadedMetadata() {
       node.playbackRate = playbackRate;
       // 移除事件监听器
     });
-
-    node._isHandle = true;
     set.add(node);
   }
 };
