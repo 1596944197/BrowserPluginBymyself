@@ -168,19 +168,18 @@ isBilibiliVideoPlaying.handle = function handle(ev) {
   }
 };
 isBilibiliVideoPlaying.loadHandle = function loadHandle() {
-  const playbackRate = +localStorage.getItem(isBilibiliVideoPlaying.key) || 1;
-  const Set = new WeakSet();
+  const playbackRate = {
+    get value() {
+      return +localStorage.getItem(isBilibiliVideoPlaying.key) || 1;
+    },
+  };
 
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       if (mutation.type === "childList") {
         mutation.addedNodes.forEach((node) => {
-          if (
-            node.tagName === "VIDEO" &&
-            node instanceof HTMLVideoElement &&
-            !Set.has(node)
-          ) {
-            handleVideo(node, Set);
+          if (node.tagName === "VIDEO" && node instanceof HTMLVideoElement) {
+            handleVideo(node);
           }
         });
       }
@@ -188,21 +187,20 @@ isBilibiliVideoPlaying.loadHandle = function loadHandle() {
   });
   observer.observe(document.body, { childList: true, subtree: true });
 
-  document.querySelectorAll("video").forEach((ev) => handleVideo(ev, Set));
+  document.querySelectorAll("video").forEach((ev) => handleVideo(ev));
 
   /**
    * @param {HTMLVideoElement} node
-   * @param {WeakSet<object>} set
    */
-  function handleVideo(node, set) {
-    if (node.playbackRate === playbackRate) return;
+  function handleVideo(node) {
+    if (node.playbackRate === playbackRate.value) return;
 
-    // 使用一次性事件监听器
-    node.addEventListener("loadedmetadata", function onLoadedMetadata() {
-      node.playbackRate = playbackRate;
-      // 移除事件监听器
+    requestIdleCallback(() => {
+      // 使用一次性事件监听器
+      node.addEventListener("play", function onLoadedMetadata() {
+        node.playbackRate = playbackRate.value;
+      });
     });
-    set.add(node);
   }
 };
 
