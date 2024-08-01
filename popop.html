@@ -5,39 +5,47 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>中间件脚本</title>
+  <style>
+    body {
+      width: 200px;
+      height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: #f3f4f6;
+      font-family: Arial, sans-serif;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px 0;
+      margin: 5px 0;
+      font-size: 16px;
+      font-weight: 600;
+      text-align: center;
+      color: #ffffff;
+      background-color: #1f2937;
+      border: none;
+      border-radius: 18px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #4b5563;
+    }
+
+    button:active {
+      background-color: #374151;
+    }
+  </style>
 </head>
 
 <body>
-  <!DOCTYPE html>
-  <html>
-
-  <head>
-    <title>Scrollbar Color Changer</title>
-    <style>
-      body {
-        width: 200px;
-        height: 100px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
-
-      button {
-        margin: 5px;
-        padding: 10px;
-        cursor: pointer;
-      }
-    </style>
-  </head>
-
-  <body>
-    <button id="saveColors">Save Colors</button>
-    <button id="removeColors">Remove Colors</button>
-    <script src="./popop.mjs"></script>
-  </body>
-
-  </html>
+  <button id="saveColors">Save Colors</button>
+  <button id="removeColors">Remove Colors</button>
+  <script src="./popup.mjs"></script>
 </body>
 
 </html>
