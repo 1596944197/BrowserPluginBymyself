@@ -24,6 +24,7 @@ function reloadPage() {
   isBilibiliVideoPlaying.loadHandle();
   nodeSeekAutoCheckIn();
   WuAiPoJieAutoLogin();
+  updateScrollbarGradient();
 }
 
 function FullScreenPDF() {
@@ -301,3 +302,56 @@ function getLargestVisibleVideo() {
 
   return largestVideo;
 }
+
+function getRandomColor() {
+  return "#" + Math.floor(Math.random() * 16777215).toString(16);
+}
+
+function getRandomGradient() {
+  return `linear-gradient(180deg, ${getRandomColor()}, ${getRandomColor()}, ${getRandomColor()})`;
+}
+
+function updateScrollbarGradient(thumbGradient, hoverGradient) {
+  thumbGradient &&
+    document.documentElement.style.setProperty(
+      "--ff-scrollbar-thumb-background",
+      thumbGradient
+    );
+  hoverGradient &&
+    document.documentElement.style.setProperty(
+      "--ff-scrollbar-thumb-hover-background",
+      hoverGradient
+    );
+}
+
+function applySavedColors() {
+  const url = window.location.origin;
+  chrome.storage.sync.get(url, (data) => {
+    if (data[url]) {
+      const { thumbColor, hoverColor } = data[url];
+      updateScrollbarGradient(thumbColor, hoverColor);
+    } else {
+      const thumbGradient = getRandomGradient();
+      const hoverGradient = getRandomGradient();
+      updateScrollbarGradient(thumbGradient, hoverGradient);
+    }
+  });
+}
+
+applySavedColors();
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "getCurrentColors") {
+    const thumbColor = getComputedStyle(
+      document.documentElement
+    ).getPropertyValue("--ff-scrollbar-thumb-background");
+    const hoverColor = getComputedStyle(
+      document.documentElement
+    ).getPropertyValue("--ff-scrollbar-thumb-hover-background");
+    sendResponse({ thumbColor, hoverColor });
+  } else if (request.action === "randomizeColors") {
+    const thumbGradient = getRandomGradient();
+    const hoverGradient = getRandomGradient();
+    updateScrollbarGradient(thumbGradient, hoverGradient);
+  }
+});
