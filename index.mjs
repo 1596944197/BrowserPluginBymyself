@@ -304,7 +304,10 @@ function getLargestVisibleVideo() {
 }
 
 function getRandomColor() {
-  return "#" + Math.floor(Math.random() * 16777215).toString(16);
+  const r = Math.floor(Math.random() * 230); // 限制红色值
+  const g = Math.floor(Math.random() * 230); // 限制绿色值
+  const b = Math.floor(Math.random() * 230); // 限制蓝色值
+  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
 }
 
 function getRandomGradient() {
