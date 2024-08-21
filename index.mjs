@@ -311,7 +311,8 @@ function getRandomColor() {
 }
 
 function getRandomGradient() {
-  return `linear-gradient(180deg, ${getRandomColor()}, ${getRandomColor()}, ${getRandomColor()})`;
+  // 线性渐变
+  return `linear-gradient(${getRandomColor()} 0%,${getRandomColor()} 100%`;
 }
 
 function updateScrollbarGradient(thumbGradient, hoverGradient) {
