@@ -33,7 +33,7 @@ document.getElementById("saveColors").addEventListener("click", () => {
 
 document.getElementById("removeColors").addEventListener("click", () => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const url = tabs[0].url;
+    const url = getDomainFromUrl(tabs[0].url);
     chrome.storage.sync.remove([url], () => {
       chrome.notifications.create(undefined, {
         type: "basic",
