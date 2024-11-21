@@ -364,9 +364,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 function startWatchScroll() {
   let scrollRequestId;
   let isScrolling = false;
-  let accumulatedScroll = 0;
   let frameCount = 0;
-  let currentSpeed = 1;
+  let currentSpeed = 0.5;
   const speedIncrement = 0.5;
   const maxSpeed = 10;
 
@@ -379,14 +378,15 @@ function startWatchScroll() {
   function scrollLoop(direction) {
     if (isScrolling) {
       scrollRequestId = requestAnimationFrame(() => {
-        accumulatedScroll += (direction * currentSpeed) * 0.5;
         frameCount++;
 
         // 每两帧滚动一次
-        if (frameCount >= 2) {
-          const movement = Math.floor(accumulatedScroll); // 向下取整确保为整数
-          window.scrollBy(0, movement);
-          accumulatedScroll -= movement; // 保留余下的累积
+        if (frameCount >= 3) {
+          const movement = direction * currentSpeed
+          window.scroll({
+            top: window.scrollY + movement,
+            behavior: 'smooth'
+          })
           frameCount = 0; // 重置帧计数器
         }
 
@@ -399,7 +399,6 @@ function startWatchScroll() {
     if (isScrolling) {
       cancelAnimationFrame(scrollRequestId);
       isScrolling = false;
-      accumulatedScroll = 0; // 重置累积值
       frameCount = 0; // 重置帧计数器
     }
   }
