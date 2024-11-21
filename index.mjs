@@ -25,6 +25,7 @@ function reloadPage() {
   nodeSeekAutoCheckIn();
   WuAiPoJieAutoLogin();
   updateScrollbarGradient();
+  startWatchScroll();
 }
 
 function FullScreenPDF() {
@@ -359,3 +360,46 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     updateScrollbarGradient(thumbGradient, hoverGradient);
   }
 });
+
+function startWatchScroll() {
+  let scrollInterval;
+  let isScrolling = false;
+  let currentSpeed = 1;
+  const speedIncrement = 1;
+  const maxSpeed = 20;
+
+  function startAutoScroll(direction = 1) {
+    stopAutoScroll(); // 先停止任何现有的滚动
+    isScrolling = true;
+    scrollInterval = setInterval(() => {
+      window.scrollBy(0, direction * currentSpeed);
+    }, 16);
+  }
+
+  function stopAutoScroll() {
+    if (isScrolling) {
+      clearInterval(scrollInterval);
+      isScrolling = false;
+    }
+  }
+
+  document.addEventListener('keydown', (event) => {
+    switch (event.key.toLowerCase()) {
+      case 'ß':
+        event.preventDefault();
+        currentSpeed = Math.min(currentSpeed + speedIncrement, maxSpeed);
+        startAutoScroll(1); // 向下滚动
+        break;
+      case '∑':
+        event.preventDefault();
+        currentSpeed = Math.min(currentSpeed + speedIncrement, maxSpeed);
+        startAutoScroll(-1); // 向上滚动
+        break;
+      case '≈':
+        event.preventDefault();
+        stopAutoScroll(); // 停止滚动
+        currentSpeed = 1; // 重置速度
+        break;
+    }
+  });
+}
