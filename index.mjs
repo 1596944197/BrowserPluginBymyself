@@ -362,24 +362,45 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 function startWatchScroll() {
-  let scrollInterval;
+  let scrollRequestId;
   let isScrolling = false;
+  let accumulatedScroll = 0;
+  let frameCount = 0;
   let currentSpeed = 1;
-  const speedIncrement = 1;
-  const maxSpeed = 20;
+  const speedIncrement = 0.5;
+  const maxSpeed = 10;
 
   function startAutoScroll(direction = 1) {
-    stopAutoScroll(); // 先停止任何现有的滚动
+    stopAutoScroll();
     isScrolling = true;
-    scrollInterval = setInterval(() => {
-      window.scrollBy(0, direction * currentSpeed);
-    }, 16);
+    scrollLoop(direction);
+  }
+
+  function scrollLoop(direction) {
+    if (isScrolling) {
+      scrollRequestId = requestAnimationFrame(() => {
+        accumulatedScroll += (direction * currentSpeed) * 0.5;
+        frameCount++;
+
+        // 每两帧滚动一次
+        if (frameCount >= 2) {
+          const movement = Math.floor(accumulatedScroll); // 向下取整确保为整数
+          window.scrollBy(0, movement);
+          accumulatedScroll -= movement; // 保留余下的累积
+          frameCount = 0; // 重置帧计数器
+        }
+
+        scrollLoop(direction);
+      });
+    }
   }
 
   function stopAutoScroll() {
     if (isScrolling) {
-      clearInterval(scrollInterval);
+      cancelAnimationFrame(scrollRequestId);
       isScrolling = false;
+      accumulatedScroll = 0; // 重置累积值
+      frameCount = 0; // 重置帧计数器
     }
   }
 
@@ -388,18 +409,19 @@ function startWatchScroll() {
       case 'ß':
         event.preventDefault();
         currentSpeed = Math.min(currentSpeed + speedIncrement, maxSpeed);
-        startAutoScroll(1); // 向下滚动
+        startAutoScroll(1);
         break;
       case '∑':
         event.preventDefault();
         currentSpeed = Math.min(currentSpeed + speedIncrement, maxSpeed);
-        startAutoScroll(-1); // 向上滚动
+        startAutoScroll(-1);
         break;
       case '≈':
         event.preventDefault();
-        stopAutoScroll(); // 停止滚动
+        stopAutoScroll();
         currentSpeed = 1; // 重置速度
         break;
     }
   });
+
 }
