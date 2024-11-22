@@ -366,6 +366,8 @@ function startWatchScroll() {
   let isScrolling = false;
   let frameCount = 0;
   let currentSpeed = 0.5;
+  // 记录上一次的方向，如果切换方向，速度重制
+  let lastDirection = 1;
   const speedIncrement = 0.5;
   const maxSpeed = 10;
 
@@ -383,10 +385,11 @@ function startWatchScroll() {
         // 每两帧滚动一次
         if (frameCount >= 3) {
           const movement = direction * currentSpeed
-          window.scroll({
-            top: window.scrollY + movement,
-            behavior: 'smooth'
-          })
+          // 检查滚动方向是否发生变化
+          if (direction !== lastDirection) {
+            currentSpeed = 0.5; // 重置速度
+          }
+          window.scrollTo(0, window.scrollY + movement);
           frameCount = 0; // 重置帧计数器
         }
 
