@@ -402,6 +402,13 @@ function startWatchScroll() {
           window.scrollTo(0, window.scrollY + movement);
           frameCount = 0; // 重置帧计数器
         }
+        // 如果触底了或者触顶了，结束本次操作
+        if (
+          (direction === 1 && window.scrollY >= document.body.scrollHeight - window.innerHeight) ||
+          (direction === -1 && window.scrollY <= 0)
+        ) {
+          stopAutoScroll();
+        }
 
         scrollLoop(direction);
       });
