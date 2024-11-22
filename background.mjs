@@ -2,6 +2,7 @@ import {
   changePlayRate,
   switchLeftTab,
   switchRightTab,
+  toggleScroll,
   ttsReadKey,
 } from "./constant.mjs";
 
@@ -10,6 +11,12 @@ chrome.runtime.onInstalled.addListener(() => {
     id: ttsReadKey,
     title: "tts voice read",
     contexts: ["selection"],
+  });
+  // 创建个滚动的菜单
+  chrome.contextMenus.create({
+    id: toggleScroll,
+    title: "开始滚动",
+    contexts: ["page"],
   });
 });
 
@@ -38,6 +45,11 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
       lang: isChineseText(info.selectionText) ? "zh-CN" : "en-US",
     });
   }
+  if (info.menuItemId === toggleScroll) {
+    chrome.tabs.sendMessage(tab.id, {
+      action: toggleScroll,
+    });
+  }
 });
 
 // 用一个队列来存储通知
@@ -48,7 +60,6 @@ const notificationQueue = new Proxy([], {
 
     // 如果队列中新增了一个元素，并且当前没有正在处理的通知，则开始处理队列
     if (property == target.length - 1 && !notificationQueue.isProcessing) {
-      console.log(235235);
       processQueue();
     }
     return true;

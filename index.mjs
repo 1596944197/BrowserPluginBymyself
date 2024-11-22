@@ -345,6 +345,7 @@ function applySavedColors() {
 
 applySavedColors();
 
+const state = new Map()
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "getCurrentColors") {
     const thumbColor = getComputedStyle(
@@ -358,6 +359,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     const thumbGradient = getRandomGradient();
     const hoverGradient = getRandomGradient();
     updateScrollbarGradient(thumbGradient, hoverGradient);
+  }
+  if (request.action === "toggle-scroll") {
+    if (state.get(sender.id) === 'running') {
+      state.set(sender.id, 'paused');
+      triggerKeyEvent('≈')
+    } else {
+      state.set(sender.id, 'running');
+      triggerKeyEvent("ß")
+    }
   }
 });
 
@@ -425,5 +435,14 @@ function startWatchScroll() {
         break;
     }
   });
+}
 
+function triggerKeyEvent(keyValue) {
+  const event = new KeyboardEvent('keydown', {
+    key: keyValue,
+    bubbles: true, // 确保事件冒泡
+    cancelable: true // 如果需要可以被取消
+  });
+
+  document.dispatchEvent(event);
 }
