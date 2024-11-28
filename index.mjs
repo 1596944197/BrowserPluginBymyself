@@ -419,6 +419,8 @@ function startWatchScroll() {
     if (isScrolling) {
       cancelAnimationFrame(scrollRequestId);
       isScrolling = false;
+      // 重置速度
+      currentSpeed = 0.5;
       frameCount = 0; // 重置帧计数器
     }
   }
