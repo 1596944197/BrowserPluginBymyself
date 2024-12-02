@@ -382,7 +382,6 @@ function startWatchScroll() {
   const maxSpeed = 10;
 
   function startAutoScroll(direction = 1) {
-    stopAutoScroll();
     isScrolling = true;
     scrollLoop(direction);
   }
