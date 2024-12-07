@@ -382,8 +382,14 @@ function startWatchScroll() {
   const maxSpeed = 10;
 
   function startAutoScroll(direction = 1) {
+    // 这里判断一下方向，重置
+    if (direction !== lastDirection) {
+      stopAutoScroll();
+    }
     isScrolling = true;
+    currentSpeed = Math.min(currentSpeed + speedIncrement, maxSpeed);
     scrollLoop(direction);
+
   }
 
   function scrollLoop(direction) {
@@ -396,7 +402,8 @@ function startWatchScroll() {
           const movement = direction * currentSpeed
           // 检查滚动方向是否发生变化
           if (direction !== lastDirection) {
-            currentSpeed = 0.5; // 重置速度
+            currentSpeed = 1
+            lastDirection = direction;
           }
           window.scrollTo(0, window.scrollY + movement);
           frameCount = 0; // 重置帧计数器
@@ -419,7 +426,7 @@ function startWatchScroll() {
       cancelAnimationFrame(scrollRequestId);
       isScrolling = false;
       // 重置速度
-      currentSpeed = 0.5;
+      currentSpeed = 1
       frameCount = 0; // 重置帧计数器
     }
   }
@@ -428,12 +435,10 @@ function startWatchScroll() {
     switch (event.key.toLowerCase()) {
       case 'ß':
         event.preventDefault();
-        currentSpeed = Math.min(currentSpeed + speedIncrement, maxSpeed);
         startAutoScroll(1);
         break;
       case '∑':
         event.preventDefault();
-        currentSpeed = Math.min(currentSpeed + speedIncrement, maxSpeed);
         startAutoScroll(-1);
         break;
       case '≈':
