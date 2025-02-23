@@ -1,10 +1,13 @@
-import {
-  changePlayRate,
-  switchLeftTab,
-  switchRightTab,
-  toggleScroll,
-  ttsReadKey,
-} from "./constant.mjs";
+const ttsReadKey = "ttsReadKey";
+
+const switchLeftTab = "switch-left-tab";
+
+const switchRightTab = "switch-right-tab";
+
+const changePlayRate = "change-play-rate";
+
+const toggleScroll = "toggle-scroll";
+
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({

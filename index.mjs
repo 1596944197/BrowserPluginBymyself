@@ -195,14 +195,25 @@ isBilibiliVideoPlaying.loadHandle = function loadHandle() {
    * @param {HTMLVideoElement} node
    */
   function handleVideo(node) {
+    debugger
     if (node.playbackRate === playbackRate.value) return;
 
-    requestIdleCallback(() => {
-      // 使用一次性事件监听器
-      node.addEventListener("play", function onLoadedMetadata() {
+    const VIDEO_EVENTS = [
+      'loadedmetadata',  // 当视频的元数据加载完成时触发
+      'canplay',         // 当视频可以开始播放时触发
+      'play',           // 当视频开始播放时触发
+      'playing',        // 当视频正在播放时触发
+      'ratechange'      // 当播放速率改变时触发
+    ];
+
+    function _handle() {
+      requestIdleCallback(() => {
         node.playbackRate = playbackRate.value;
-      });
-    });
+      })
+    }
+    VIDEO_EVENTS.forEach((event) => {
+      node.addEventListener(event, _handle)
+    })
   }
 };
 
