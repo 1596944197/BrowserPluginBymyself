@@ -18,6 +18,13 @@
     "tts",
     "contextMenus"
   ],
+  "host_permissions": [
+    "http://127.0.0.1:39002/*",
+    "https://www.bilibili.com/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' http://127.0.0.1:* https://*"
+  },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],

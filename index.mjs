@@ -195,25 +195,24 @@ isBilibiliVideoPlaying.loadHandle = function loadHandle() {
    * @param {HTMLVideoElement} node
    */
   function handleVideo(node) {
-    debugger
     if (node.playbackRate === playbackRate.value) return;
 
     const VIDEO_EVENTS = [
-      'loadedmetadata',  // 当视频的元数据加载完成时触发
-      'canplay',         // 当视频可以开始播放时触发
-      'play',           // 当视频开始播放时触发
-      'playing',        // 当视频正在播放时触发
-      'ratechange'      // 当播放速率改变时触发
+      "loadedmetadata", // 当视频的元数据加载完成时触发
+      "canplay", // 当视频可以开始播放时触发
+      "play", // 当视频开始播放时触发
+      "playing", // 当视频正在播放时触发
+      "ratechange", // 当播放速率改变时触发
     ];
 
     function _handle() {
       requestIdleCallback(() => {
         node.playbackRate = playbackRate.value;
-      })
+      });
     }
     VIDEO_EVENTS.forEach((event) => {
-      node.addEventListener(event, _handle)
-    })
+      node.addEventListener(event, _handle);
+    });
   }
 };
 
@@ -356,7 +355,7 @@ function applySavedColors() {
 
 applySavedColors();
 
-const state = new Map()
+const state = new Map();
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "getCurrentColors") {
     const thumbColor = getComputedStyle(
@@ -372,12 +371,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     updateScrollbarGradient(thumbGradient, hoverGradient);
   }
   if (request.action === "toggle-scroll") {
-    if (state.get(sender.id) === 'running') {
-      state.set(sender.id, 'paused');
-      triggerKeyEvent('≈')
+    if (state.get(sender.id) === "running") {
+      state.set(sender.id, "paused");
+      triggerKeyEvent("≈");
     } else {
-      state.set(sender.id, 'running');
-      triggerKeyEvent("ß")
+      state.set(sender.id, "running");
+      triggerKeyEvent("ß");
     }
   }
 });
@@ -400,7 +399,6 @@ function startWatchScroll() {
     isScrolling = true;
     currentSpeed = Math.min(currentSpeed + speedIncrement, maxSpeed);
     scrollLoop(direction);
-
   }
 
   function scrollLoop(direction) {
@@ -410,10 +408,10 @@ function startWatchScroll() {
 
         // 每两帧滚动一次
         if (frameCount >= 3) {
-          const movement = direction * currentSpeed
+          const movement = direction * currentSpeed;
           // 检查滚动方向是否发生变化
           if (direction !== lastDirection) {
-            currentSpeed = 1
+            currentSpeed = 1;
             lastDirection = direction;
           }
           window.scrollTo(0, window.scrollY + movement);
@@ -421,7 +419,9 @@ function startWatchScroll() {
         }
         // 如果触底了或者触顶了，结束本次操作
         if (
-          (direction === 1 && window.scrollY >= document.body.scrollHeight - window.innerHeight) ||
+          (direction === 1 &&
+            window.scrollY >=
+              document.body.scrollHeight - window.innerHeight) ||
           (direction === -1 && window.scrollY <= 0)
         ) {
           stopAutoScroll();
@@ -437,22 +437,22 @@ function startWatchScroll() {
       cancelAnimationFrame(scrollRequestId);
       isScrolling = false;
       // 重置速度
-      currentSpeed = 1
+      currentSpeed = 1;
       frameCount = 0; // 重置帧计数器
     }
   }
 
-  document.addEventListener('keydown', (event) => {
+  document.addEventListener("keydown", (event) => {
     switch (event.key.toLowerCase()) {
-      case 'ß':
+      case "ß":
         event.preventDefault();
         startAutoScroll(1);
         break;
-      case '∑':
+      case "∑":
         event.preventDefault();
         startAutoScroll(-1);
         break;
-      case '≈':
+      case "≈":
         event.preventDefault();
         stopAutoScroll();
         currentSpeed = 1; // 重置速度
@@ -462,10 +462,10 @@ function startWatchScroll() {
 }
 
 function triggerKeyEvent(keyValue) {
-  const event = new KeyboardEvent('keydown', {
+  const event = new KeyboardEvent("keydown", {
     key: keyValue,
     bubbles: true, // 确保事件冒泡
-    cancelable: true // 如果需要可以被取消
+    cancelable: true, // 如果需要可以被取消
   });
 
   document.dispatchEvent(event);

@@ -8,7 +8,7 @@ const changePlayRate = "change-play-rate";
 
 const toggleScroll = "toggle-scroll";
 
-
+const requestHapi = "request-hapi";
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: ttsReadKey,
@@ -19,6 +19,12 @@ chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: toggleScroll,
     title: "开始滚动",
+    contexts: ["page"],
+  });
+  // 请求Hapi服务,仅在bilibili.com下有效
+  chrome.contextMenus.create({
+    id: requestHapi,
+    title: "请求Hapi服务",
     contexts: ["page"],
   });
 });
@@ -52,6 +58,9 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     chrome.tabs.sendMessage(tab.id, {
       action: toggleScroll,
     });
+  }
+  if (info.menuItemId === requestHapi) {
+    requestHapiHandle();
   }
 });
 
@@ -129,5 +138,43 @@ function switchTab(direction) {
       let newIndex = (activeTabIndex + direction + tabs.length) % tabs.length;
       chrome.tabs.update(tabs[newIndex].id, { active: true });
     });
+  });
+}
+
+function requestHapiHandle() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const url = encodeURIComponent(tabs[0].url);
+    const apiUrl = new URL(`http://127.0.0.1:39002/start-crawl/${url}`);
+
+    fetch(apiUrl, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+      mode: "cors",
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const text = await response.text();
+        chrome.notifications.create({
+          type: "basic",
+          iconUrl: "icon.png",
+          title: "请求成功",
+          message: text,
+          duration: 1500,
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        chrome.notifications.create({
+          type: "basic",
+          iconUrl: "icon.png",
+          title: "请求失败",
+          message: "无法连接到本地服务器，请确保服务器已启动",
+          duration: 1500,
+        });
+      });
   });
 }
