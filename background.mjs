@@ -163,7 +163,6 @@ function requestHapiHandle() {
           iconUrl: "icon.png",
           title: "请求成功",
           message: text,
-          duration: 1500,
         });
       })
       .catch((error) => {
@@ -173,7 +172,6 @@ function requestHapiHandle() {
           iconUrl: "icon.png",
           title: "请求失败",
           message: "无法连接到本地服务器，请确保服务器已启动",
-          duration: 1500,
         });
       });
   });
