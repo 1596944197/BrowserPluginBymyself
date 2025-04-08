@@ -75,7 +75,11 @@ function EnableCopy() {
   return function (_a) {
     if (!_a?.key) return;
     const key = "".toLocaleUpperCase.call(_a.key);
-    if ((keyword.includes(key) || removeKey.includes(key)) && _a.ctrlKey) {
+    // 检测是否为Mac系统
+    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+    const controlKey = isMac ? _a.metaKey : _a.ctrlKey;
+
+    if ((keyword.includes(key) || removeKey.includes(key)) && controlKey) {
       passKey.push(key);
       if (isEntry(keyword)) {
         document.body.contentEditable = true;
@@ -131,7 +135,11 @@ function isBilibiliVideoPlaying() {
 isBilibiliVideoPlaying.key = "_videoRate";
 isBilibiliVideoPlaying.handle = function handle(ev) {
   const key = isBilibiliVideoPlaying.key;
-  if (ev.ctrlKey && ["ArrowUp", "ArrowDown"].includes(ev.key)) {
+  // 检测是否为Mac系统
+  const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+  const controlKey = isMac ? ev.shiftKey : ev.ctrlKey;
+
+  if (controlKey && ["ArrowUp", "ArrowDown"].includes(ev.key)) {
     const currentVideo = getLargestVisibleVideo();
     if (!currentVideo) return;
 
@@ -223,7 +231,11 @@ function toggleYoTubeVideoControl() {
   return function l(_a) {
     if (!_a?.key) return;
     const key = "".toLocaleUpperCase.call(_a.key);
-    if (key === "V" && _a.ctrlKey) {
+    // 检测是否为Mac系统
+    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+    const controlKey = isMac ? _a.metaKey : _a.ctrlKey;
+
+    if (key === "V" && controlKey) {
       const videoControl = document.querySelector(".ytp-chrome-bottom");
       if (!videoControl) return;
       const subButton = document.querySelector(".iv-branding");
@@ -421,7 +433,7 @@ function startWatchScroll() {
         if (
           (direction === 1 &&
             window.scrollY >=
-              document.body.scrollHeight - window.innerHeight) ||
+            document.body.scrollHeight - window.innerHeight) ||
           (direction === -1 && window.scrollY <= 0)
         ) {
           stopAutoScroll();
