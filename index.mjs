@@ -455,7 +455,7 @@ function startWatchScroll() {
   }
 
   document.addEventListener("keydown", (event) => {
-    switch (event.key.toLowerCase()) {
+    switch (event.key?.toLowerCase?.()) {
       case "ß":
         event.preventDefault();
         startAutoScroll(1);
