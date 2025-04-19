@@ -143,36 +143,76 @@ function switchTab(direction) {
 
 function requestHapiHandle() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const url = encodeURIComponent(tabs[0].url);
-    const apiUrl = new URL(`http://127.0.0.1:39002/start-crawl/${url}`);
+    const url = tabs[0].url;
+    console.log("当前页面URL:", url);
 
-    fetch(apiUrl, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-      },
-      mode: "cors",
-    })
-      .then(async (response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const text = await response.text();
-        chrome.notifications.create({
-          type: "basic",
-          iconUrl: "icon.png",
-          title: "请求成功",
-          message: text,
-        });
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        chrome.notifications.create({
-          type: "basic",
-          iconUrl: "icon.png",
-          title: "请求失败",
-          message: "无法连接到本地服务器，请确保服务器已启动",
-        });
+    if (!url.includes("bilibili.com")) {
+      chrome.notifications.create({
+        type: "basic",
+        iconUrl: "icon.png",
+        title: "错误",
+        message: "此功能仅在B站页面可用",
       });
+      return;
+    }
+
+    const apiUrl = new URL(
+      `http://127.0.0.1:39002/start-crawl/${encodeURIComponent(url)}`
+    );
+
+    chrome.cookies.getAll({ domain: ".bilibili.com" }).then((cookies) => {
+      // 将 cookie 转换为键值对格式
+      const cookiePairs = cookies.map((cookie) => {
+        return {
+          name: cookie.name,
+          value: decodeURIComponent(cookie.value),
+        };
+      });
+
+      console.log("转换后的cookies:", cookiePairs);
+
+      if (!cookiePairs || cookiePairs.length === 0) {
+        chrome.notifications.create({
+          type: "basic",
+          iconUrl: "icon.png",
+          title: "错误",
+          message: "未能获取到任何cookie",
+        });
+        return;
+      }
+
+      fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cookies: cookiePairs,
+        }),
+        mode: "cors",
+      })
+        .then(async (response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          const text = await response.text();
+          chrome.notifications.create({
+            type: "basic",
+            iconUrl: "icon.png",
+            title: "请求成功",
+            message: text,
+          });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          chrome.notifications.create({
+            type: "basic",
+            iconUrl: "icon.png",
+            title: "请求失败",
+            message: "无法连接到本地服务器，请确保服务器已启动",
+          });
+        });
+    });
   });
 }
