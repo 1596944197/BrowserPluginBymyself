@@ -121,7 +121,7 @@ function handleNotification(req, sendResponse) {
             setTimeout(() => {
               resolve();
             }, 400);
-          }, 800);
+          }, 1000);
           sendResponse({ status: "success", message: "调整速度成功" });
         }
       );
