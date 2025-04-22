@@ -398,13 +398,34 @@ function startWatchScroll() {
   let isScrolling = false;
   let frameCount = 0;
   let currentSpeed = 0.5;
-  // 记录上一次的方向，如果切换方向，速度重制
   let lastDirection = 1;
   const speedIncrement = 0.5;
   const maxSpeed = 10;
+  let scrollContainer = document.documentElement; // 默认使用html元素
+
+  // 检测实际的滚动容器
+  function detectScrollContainer() {
+    // 检查documentElement是否可以滚动
+    if (document.documentElement.scrollHeight > document.documentElement.clientHeight) {
+      return document.documentElement;
+    }
+    // 检查body是否可以滚动
+    if (document.body.scrollHeight > document.body.clientHeight) {
+      return document.body;
+    }
+    // 检查其他可能包含滚动的元素
+    const scrollableElements = document.querySelectorAll('*');
+    for (let el of scrollableElements) {
+      if (el.scrollHeight > el.clientHeight && getComputedStyle(el).overflowY === 'auto') {
+        return el;
+      }
+    }
+    return document.documentElement; // 默认返回html元素
+  }
 
   function startAutoScroll(direction = 1) {
-    // 这里判断一下方向，重置
+    scrollContainer = detectScrollContainer(); // 每次开始前重新检测
+
     if (direction !== lastDirection) {
       stopAutoScroll();
     }
@@ -418,23 +439,25 @@ function startWatchScroll() {
       scrollRequestId = requestAnimationFrame(() => {
         frameCount++;
 
-        // 每两帧滚动一次
         if (frameCount >= 3) {
           const movement = direction * currentSpeed;
-          // 检查滚动方向是否发生变化
           if (direction !== lastDirection) {
             currentSpeed = 1;
             lastDirection = direction;
           }
-          window.scrollTo(0, window.scrollY + movement);
-          frameCount = 0; // 重置帧计数器
+
+          // 使用检测到的滚动容器
+          scrollContainer.scrollTop += movement;
+
+          frameCount = 0;
         }
-        // 如果触底了或者触顶了，结束本次操作
+
+        // 检查是否到达边界
         if (
           (direction === 1 &&
-            window.scrollY >=
-            document.body.scrollHeight - window.innerHeight) ||
-          (direction === -1 && window.scrollY <= 0)
+            scrollContainer.scrollTop >=
+            scrollContainer.scrollHeight - scrollContainer.clientHeight) ||
+          (direction === -1 && scrollContainer.scrollTop <= 0)
         ) {
           stopAutoScroll();
         }
@@ -448,9 +471,8 @@ function startWatchScroll() {
     if (isScrolling) {
       cancelAnimationFrame(scrollRequestId);
       isScrolling = false;
-      // 重置速度
       currentSpeed = 1;
-      frameCount = 0; // 重置帧计数器
+      frameCount = 0;
     }
   }
 
@@ -467,7 +489,7 @@ function startWatchScroll() {
       case "≈":
         event.preventDefault();
         stopAutoScroll();
-        currentSpeed = 1; // 重置速度
+        currentSpeed = 1;
         break;
     }
   });
