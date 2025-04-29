@@ -17,6 +17,8 @@
   window.addEventListener("load", reloadPage);
 })();
 
+isBilibiliVideoPlaying.loadHandle();
+
 function reloadPage() {
   FullScreenPDF();
   deleteAds();
@@ -76,7 +78,7 @@ function EnableCopy() {
     if (!_a?.key) return;
     const key = "".toLocaleUpperCase.call(_a.key);
     // 检测是否为Mac系统
-    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+    const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
     const controlKey = isMac ? _a.metaKey : _a.ctrlKey;
 
     if ((keyword.includes(key) || removeKey.includes(key)) && controlKey) {
@@ -136,7 +138,7 @@ isBilibiliVideoPlaying.key = "_videoRate";
 isBilibiliVideoPlaying.handle = function handle(ev) {
   const key = isBilibiliVideoPlaying.key;
   // 检测是否为Mac系统
-  const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+  const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
   const controlKey = isMac ? ev.shiftKey : ev.ctrlKey;
 
   if (controlKey && ["ArrowUp", "ArrowDown"].includes(ev.key)) {
@@ -232,7 +234,7 @@ function toggleYoTubeVideoControl() {
     if (!_a?.key) return;
     const key = "".toLocaleUpperCase.call(_a.key);
     // 检测是否为Mac系统
-    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+    const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
     const controlKey = isMac ? _a.metaKey : _a.ctrlKey;
 
     if (key === "V" && controlKey) {
@@ -406,7 +408,10 @@ function startWatchScroll() {
   // 检测实际的滚动容器
   function detectScrollContainer() {
     // 检查documentElement是否可以滚动
-    if (document.documentElement.scrollHeight > document.documentElement.clientHeight) {
+    if (
+      document.documentElement.scrollHeight >
+      document.documentElement.clientHeight
+    ) {
       return document.documentElement;
     }
     // 检查body是否可以滚动
@@ -414,9 +419,12 @@ function startWatchScroll() {
       return document.body;
     }
     // 检查其他可能包含滚动的元素
-    const scrollableElements = document.querySelectorAll('*');
+    const scrollableElements = document.querySelectorAll("*");
     for (let el of scrollableElements) {
-      if (el.scrollHeight > el.clientHeight && getComputedStyle(el).overflowY === 'auto') {
+      if (
+        el.scrollHeight > el.clientHeight &&
+        getComputedStyle(el).overflowY === "auto"
+      ) {
         return el;
       }
     }
@@ -456,7 +464,7 @@ function startWatchScroll() {
         if (
           (direction === 1 &&
             scrollContainer.scrollTop >=
-            scrollContainer.scrollHeight - scrollContainer.clientHeight) ||
+              scrollContainer.scrollHeight - scrollContainer.clientHeight) ||
           (direction === -1 && scrollContainer.scrollTop <= 0)
         ) {
           stopAutoScroll();
