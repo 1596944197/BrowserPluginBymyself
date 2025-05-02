@@ -17,8 +17,6 @@
   window.addEventListener("load", reloadPage);
 })();
 
-isBilibiliVideoPlaying.loadHandle();
-
 function reloadPage() {
   FullScreenPDF();
   deleteAds();
