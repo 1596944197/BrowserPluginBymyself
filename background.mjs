@@ -8,6 +8,8 @@ const changePlayRate = "change-play-rate";
 
 const toggleScroll = "toggle-scroll";
 
+const captureVisible = "capture-visible";
+
 const requestHapi = "request-hapi";
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
@@ -21,6 +23,12 @@ chrome.runtime.onInstalled.addListener(() => {
     title: "开始滚动",
     contexts: ["page"],
   });
+  // 滚动截图
+  chrome.contextMenus.create({
+    id: captureVisible,
+    title: "滚动截图",
+    contexts: ["page"],
+  });
   // 请求Hapi服务,仅在bilibili.com下有效
   chrome.contextMenus.create({
     id: requestHapi,
@@ -32,6 +40,14 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
   if (req.type === changePlayRate) {
     handleNotification(req, sendResponse);
+    return true;
+  }
+  if (req.type === captureVisible) {
+    chrome.windows.getCurrent((win) => {
+      chrome.tabs.captureVisibleTab(win.id, { format: "png" }, (dataUrl) => {
+        sendResponse({ dataUrl });
+      });
+    });
     return true;
   }
 });
@@ -61,6 +77,9 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   }
   if (info.menuItemId === requestHapi) {
     requestHapiHandle();
+  }
+  if (info.menuItemId === captureVisible) {
+    chrome.tabs.sendMessage(tab.id, { action: "scroll-capture" });
   }
 });
 

@@ -391,8 +391,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       triggerKeyEvent("ß");
     }
   }
+  if (request.action === "scroll-capture") {
+    scrollAndCapture();
+  }
 });
 
+let scrollContainer = document.documentElement; // 默认使用html元素
 function startWatchScroll() {
   let scrollRequestId;
   let isScrolling = false;
@@ -401,33 +405,6 @@ function startWatchScroll() {
   let lastDirection = 1;
   const speedIncrement = 0.5;
   const maxSpeed = 10;
-  let scrollContainer = document.documentElement; // 默认使用html元素
-
-  // 检测实际的滚动容器
-  function detectScrollContainer() {
-    // 检查documentElement是否可以滚动
-    if (
-      document.documentElement.scrollHeight >
-      document.documentElement.clientHeight
-    ) {
-      return document.documentElement;
-    }
-    // 检查body是否可以滚动
-    if (document.body.scrollHeight > document.body.clientHeight) {
-      return document.body;
-    }
-    // 检查其他可能包含滚动的元素
-    const scrollableElements = document.querySelectorAll("*");
-    for (let el of scrollableElements) {
-      if (
-        el.scrollHeight > el.clientHeight &&
-        getComputedStyle(el).overflowY === "auto"
-      ) {
-        return el;
-      }
-    }
-    return document.documentElement; // 默认返回html元素
-  }
 
   function startAutoScroll(direction = 1) {
     scrollContainer = detectScrollContainer(); // 每次开始前重新检测
@@ -501,6 +478,32 @@ function startWatchScroll() {
   });
 }
 
+// 检测实际的滚动容器
+function detectScrollContainer() {
+  // 检查documentElement是否可以滚动
+  if (
+    document.documentElement.scrollHeight >
+    document.documentElement.clientHeight
+  ) {
+    return document.documentElement;
+  }
+  // 检查body是否可以滚动
+  if (document.body.scrollHeight > document.body.clientHeight) {
+    return document.body;
+  }
+  // 检查其他可能包含滚动的元素
+  const scrollableElements = document.querySelectorAll("*");
+  for (let el of scrollableElements) {
+    if (
+      el.scrollHeight > el.clientHeight &&
+      getComputedStyle(el).overflowY === "auto"
+    ) {
+      return el;
+    }
+  }
+  return document.documentElement; // 默认返回html元素
+}
+
 function triggerKeyEvent(keyValue) {
   const event = new KeyboardEvent("keydown", {
     key: keyValue,
@@ -509,4 +512,45 @@ function triggerKeyEvent(keyValue) {
   });
 
   document.dispatchEvent(event);
+}
+
+async function scrollAndCapture() {
+  const container = detectScrollContainer();
+  const totalHeight = container.scrollHeight;
+  const viewHeight = container.clientHeight;
+  let scrollTop = 0;
+  let shots = [];
+
+  while (scrollTop < totalHeight) {
+    container.scrollTop = scrollTop;
+    await new Promise((r) => setTimeout(r, 500)); // 等渲染
+    const { dataUrl } = await new Promise((r) =>
+      chrome.runtime.sendMessage({ type: "capture-visible" }, r)
+    );
+    shots.push({ scrollTop, dataUrl });
+    scrollTop += viewHeight * 0.9;
+  }
+
+  if (!shots.every((shot) => shot.dataUrl.includes("data:image/png"))) {
+    alert("截图失败");
+    return;
+  }
+
+  // 拼接
+  const canvas = document.createElement("canvas");
+  canvas.width = container.clientWidth;
+  canvas.height = totalHeight;
+  const ctx = canvas.getContext("2d");
+  for (const shot of shots) {
+    const img = new Image();
+    img.src = shot.dataUrl;
+    // eslint-disable-next-line no-await-in-loop
+    await img.decode();
+    ctx.drawImage(img, 0, shot.scrollTop);
+  }
+  // 下载
+  const a = document.createElement("a");
+  a.href = canvas.toDataURL("image/png");
+  a.download = `${location.host}.png`;
+  a.click();
 }
