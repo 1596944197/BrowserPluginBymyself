@@ -12,6 +12,7 @@
   "permissions": [
     "contextMenus",
     "tabs",
+    "activeTab",
     "notifications",
     "commands",
     "cookies"
