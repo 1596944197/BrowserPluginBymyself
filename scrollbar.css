@@ -6,7 +6,7 @@
   background: #f1f1f1;
 } */
 
-::-webkit-scrollbar-thumb {
+/* ::-webkit-scrollbar-thumb {
   background: var(--ff-scrollbar-thumb-background);
   border-radius: 10px;
 }
@@ -14,4 +14,4 @@
 ::-webkit-scrollbar-thumb:hover {
   background: var(--ff-scrollbar-thumb-hover-background);
   width: 14px;
-}
+} */
