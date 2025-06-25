@@ -24,7 +24,7 @@ function reloadPage() {
   isBilibiliVideoPlaying.loadHandle();
   nodeSeekAutoCheckIn();
   WuAiPoJieAutoLogin();
-  updateScrollbarGradient();
+  // updateScrollbarGradient();
   startWatchScroll();
 }
 
@@ -326,62 +326,62 @@ function getLargestVisibleVideo() {
   return largestVideo;
 }
 
-function getRandomColor() {
-  const r = Math.floor(Math.random() * 230); // 限制红色值
-  const g = Math.floor(Math.random() * 230); // 限制绿色值
-  const b = Math.floor(Math.random() * 230); // 限制蓝色值
-  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
-}
+// function getRandomColor() {
+//   const r = Math.floor(Math.random() * 230); // 限制红色值
+//   const g = Math.floor(Math.random() * 230); // 限制绿色值
+//   const b = Math.floor(Math.random() * 230); // 限制蓝色值
+//   return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+// }
 
-function getRandomGradient() {
-  // 线性渐变
-  return `linear-gradient(${getRandomColor()} 0%,${getRandomColor()} 100%`;
-}
+// function getRandomGradient() {
+//   // 线性渐变
+//   return `linear-gradient(${getRandomColor()} 0%,${getRandomColor()} 100%`;
+// }
 
-function updateScrollbarGradient(thumbGradient, hoverGradient) {
-  thumbGradient &&
-    document.documentElement.style.setProperty(
-      "--ff-scrollbar-thumb-background",
-      thumbGradient
-    );
-  hoverGradient &&
-    document.documentElement.style.setProperty(
-      "--ff-scrollbar-thumb-hover-background",
-      hoverGradient
-    );
-}
+// function updateScrollbarGradient(thumbGradient, hoverGradient) {
+//   thumbGradient &&
+//     document.documentElement.style.setProperty(
+//       "--ff-scrollbar-thumb-background",
+//       thumbGradient
+//     );
+//   hoverGradient &&
+//     document.documentElement.style.setProperty(
+//       "--ff-scrollbar-thumb-hover-background",
+//       hoverGradient
+//     );
+// }
 
-function applySavedColors() {
-  const url = window.location.origin;
-  chrome.storage.sync.get(url, (data) => {
-    if (data[url]) {
-      const { thumbColor, hoverColor } = data[url];
-      updateScrollbarGradient(thumbColor, hoverColor);
-    } else {
-      const thumbGradient = getRandomGradient();
-      const hoverGradient = getRandomGradient();
-      updateScrollbarGradient(thumbGradient, hoverGradient);
-    }
-  });
-}
+// function applySavedColors() {
+//   const url = window.location.origin;
+//   chrome.storage.sync.get(url, (data) => {
+//     if (data[url]) {
+//       const { thumbColor, hoverColor } = data[url];
+//       updateScrollbarGradient(thumbColor, hoverColor);
+//     } else {
+//       const thumbGradient = getRandomGradient();
+//       const hoverGradient = getRandomGradient();
+//       updateScrollbarGradient(thumbGradient, hoverGradient);
+//     }
+//   });
+// }
 
-applySavedColors();
+// applySavedColors();
 
 const state = new Map();
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === "getCurrentColors") {
-    const thumbColor = getComputedStyle(
-      document.documentElement
-    ).getPropertyValue("--ff-scrollbar-thumb-background");
-    const hoverColor = getComputedStyle(
-      document.documentElement
-    ).getPropertyValue("--ff-scrollbar-thumb-hover-background");
-    sendResponse({ thumbColor, hoverColor });
-  } else if (request.action === "randomizeColors") {
-    const thumbGradient = getRandomGradient();
-    const hoverGradient = getRandomGradient();
-    updateScrollbarGradient(thumbGradient, hoverGradient);
-  }
+  // if (request.action === "getCurrentColors") {
+  //   const thumbColor = getComputedStyle(
+  //     document.documentElement
+  //   ).getPropertyValue("--ff-scrollbar-thumb-background");
+  //   const hoverColor = getComputedStyle(
+  //     document.documentElement
+  //   ).getPropertyValue("--ff-scrollbar-thumb-hover-background");
+  //   sendResponse({ thumbColor, hoverColor });
+  // } else if (request.action === "randomizeColors") {
+  //   const thumbGradient = getRandomGradient();
+  //   const hoverGradient = getRandomGradient();
+  //   updateScrollbarGradient(thumbGradient, hoverGradient);
+  // }
   if (request.action === "toggle-scroll") {
     if (state.get(sender.id) === "running") {
       state.set(sender.id, "paused");

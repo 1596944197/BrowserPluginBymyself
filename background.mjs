@@ -1,5 +1,3 @@
-const ttsReadKey = "ttsReadKey";
-
 const switchLeftTab = "switch-left-tab";
 
 const switchRightTab = "switch-right-tab";
@@ -12,11 +10,6 @@ const captureVisible = "capture-visible";
 
 const requestHapi = "request-hapi";
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.contextMenus.create({
-    id: ttsReadKey,
-    title: "tts voice read",
-    contexts: ["selection"],
-  });
   // 创建个滚动的菜单
   chrome.contextMenus.create({
     id: toggleScroll,
@@ -61,15 +54,6 @@ chrome.commands.onCommand.addListener((command) => {
 });
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-  if (info.menuItemId === ttsReadKey) {
-    function isChineseText(text) {
-      const chineseRegex = /[\u4e00-\u9fa5]/;
-      return chineseRegex.test(text);
-    }
-    chrome.tts.speak(info.selectionText, {
-      lang: isChineseText(info.selectionText) ? "zh-CN" : "en-US",
-    });
-  }
   if (info.menuItemId === toggleScroll) {
     chrome.tabs.sendMessage(tab.id, {
       action: toggleScroll,

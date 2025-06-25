@@ -13,12 +13,8 @@
     "contextMenus",
     "tabs",
     "notifications",
-    "storage",
     "commands",
-    "tts",
-    "contextMenus",
-    "cookies",
-    "activeTab"
+    "cookies"
   ],
   "host_permissions": [
     "http://127.0.0.1:39002/*",
