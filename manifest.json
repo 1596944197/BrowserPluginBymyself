@@ -1,6 +1,6 @@
 {
-  "name": "杂七杂八",
-  "description": "杂七杂八的插件",
+  "name": "B站数据分析快捷请求",
+  "description": "B站数据分析快捷请求",
   "version": "1.0",
   "manifest_version": 3,
   "icons": {
@@ -22,7 +22,7 @@
     "https://bilibili.com/*"
   ],
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' http://127.0.0.1:* https://*"
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' http://127.0.0.1:39002 https://*"
   },
   "content_scripts": [
     {
@@ -37,10 +37,6 @@
   "homepage_url": "https://mh33.top/payList",
   "omnibox": {
     "keyword": "mv"
-  },
-  "action": {
-    "default_popup": "popop.html",
-    "default_icon": "icon.png"
   },
   "commands": {
     "switch-left-tab": {
